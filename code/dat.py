@@ -5,6 +5,79 @@ def load_folder():
 
     return "/disks/shear14/mj/cosmos/"
 
+def load_lens_with_qz_specz():
+    '''column names:
+    #
+    zb, odds, zb_mean, chi2, n_band, best_run, ebv, i_auto, ra, dec
+    best_run are taken from table 1 of eriksen et al 2018:
+
+    1 False None Ell1, Ell2, Ell3, Ell4, Ell5, Ell6
+    2 False None Ell6, Ell7, S0, Sa, Sb, Sc
+    3 True None Sc, Sd, Sdm, SB0, SB1, SB2
+    4 True None SB2, SB3, SB4, SB5, SB6, SB7, SB8, SB9, SB10, SB11
+    5 False None BC03(0.008, 0.509), BC03(0.008, 8.0), BC03(0.02, 0.509), BC03(0.02, 2.1),
+    BC03(0.02, 2.6), BC03(0.02, 3.75)
+    6-15 True Calzetti SB4, SB5, SB6, SB7, SB8, SB9, SB10, SB11
+    16-25 True Calzetti+Bump 1 SB4, SB5, SB6, SB7, SB8, SB9, SB10, SB11
+    26-35 True Calzetti+Bump 2 SB4, SB5, SB6, SB7, SB8, SB9, SB10, SB11
+
+    '''
+    folder_path = load_folder()
+    filename = "pauxcosmos_zs.fits"
+    y = pf.open(filename)[1].data
+    zb, odds, zb_mean, chi2, n_band, best_run, ebv, i_auto, ra, dec = y['zb'], y['odds'], y['zb_mean'], y['chi2'], y['n_band'], y['best_run'], y['ebv'], y['i_auto'], y['ra'], y['dec']
+
+    return np.vstack([zb, odds, zb_mean, chi2, n_band, best_run, ebv, i_auto, ra, dec]).T
+
+def load_lens_with_qz_pz():
+    '''column names:
+    #
+    zb, odds, zb_mean, chi2, n_band, best_run, ebv, i_auto, ra, dec
+    best_run are taken from table 1 of eriksen et al 2018:
+
+    1 False None Ell1, Ell2, Ell3, Ell4, Ell5, Ell6
+    2 False None Ell6, Ell7, S0, Sa, Sb, Sc
+    3 True None Sc, Sd, Sdm, SB0, SB1, SB2
+    4 True None SB2, SB3, SB4, SB5, SB6, SB7, SB8, SB9, SB10, SB11
+    5 False None BC03(0.008, 0.509), BC03(0.008, 8.0), BC03(0.02, 0.509), BC03(0.02, 2.1),
+    BC03(0.02, 2.6), BC03(0.02, 3.75)
+    6-15 True Calzetti SB4, SB5, SB6, SB7, SB8, SB9, SB10, SB11
+    16-25 True Calzetti+Bump 1 SB4, SB5, SB6, SB7, SB8, SB9, SB10, SB11
+    26-35 True Calzetti+Bump 2 SB4, SB5, SB6, SB7, SB8, SB9, SB10, SB11
+
+    '''
+    folder_path = load_folder()
+    filename = "pauxcosmos_zp.fits"
+    y = pf.open(filename)[1].data
+    zb, odds, zb_mean, chi2, n_band, best_run, ebv, i_auto, ra, dec = y['zb'], y['odds'], y['zb_mean'], y['chi2'], y['n_band'], y['best_run'], y['ebv'], y['i_auto'], y['ra'], y['dec']
+
+    return np.vstack([zb, odds, zb_mean, chi2, n_band, best_run, ebv, i_auto, ra, dec]).T
+
+
+def load_lens_with_qz_specz():
+    '''column names:
+    #
+    zb, odds, zb_mean, chi2, n_band, best_run, ebv, i_auto, ra, dec
+    best_run are taken from table 1 of eriksen et al 2018:
+
+    1 False None Ell1, Ell2, Ell3, Ell4, Ell5, Ell6
+    2 False None Ell6, Ell7, S0, Sa, Sb, Sc
+    3 True None Sc, Sd, Sdm, SB0, SB1, SB2
+    4 True None SB2, SB3, SB4, SB5, SB6, SB7, SB8, SB9, SB10, SB11
+    5 False None BC03(0.008, 0.509), BC03(0.008, 8.0), BC03(0.02, 0.509), BC03(0.02, 2.1),
+    BC03(0.02, 2.6), BC03(0.02, 3.75)
+    6-15 True Calzetti SB4, SB5, SB6, SB7, SB8, SB9, SB10, SB11
+    16-25 True Calzetti+Bump 1 SB4, SB5, SB6, SB7, SB8, SB9, SB10, SB11
+    26-35 True Calzetti+Bump 2 SB4, SB5, SB6, SB7, SB8, SB9, SB10, SB11
+
+    '''
+    folder_path = load_folder()
+    filename = "pauxcosmos.fits"
+    y = pf.open(filename)[1].data
+    zb, odds, zb_mean, chi2, n_band, best_run, ebv, i_auto, ra, dec = y['zb'], y['odds'], y['zb_mean'], y['chi2'], y['n_band'], y['best_run'], y['ebv'], y['i_auto'], y['ra'], y['dec']
+
+    return np.vstack([zb, odds, zb_mean, chi2, n_band, best_run, ebv, i_auto, ra, dec]).T
+
 def load_lens():
     '''coloumn names:
        #zb jk  dec   ra       z      Iauto   K         Z       R       G        V      B        U
