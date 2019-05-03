@@ -49,11 +49,54 @@ def load_lens_with_qz_pz():
     folder_path = load_folder()
     filename = "pauxcosmos_zp.fits"
     y = pf.open(folder_path+filename)[1].data
-    zb, qz, zb_mean, chi2, n_band, best_run, ebv, i_auto, ra, dec = y['zb'], y['qz'], y['zb_mean'], y['chi2'], y['n_band'], y['best_run'], y['ebv'], y['i_auto'], y['ra'], y['dec']
+    zb, qz, zb_mean, chi2, n_band, best_run, ebv, i_auto, radius, sersic, ra, dec = y['zb'], y['qz'], y['zb_mean'], y['chi2'], y['n_band'], y['best_run'], y['ebv'], y['i_auto'], np.sqrt(y['acs_a_image']*y['acs_b_image']), y['sersic_n_gim2d'], y['ra'], y['dec']
 
-    return np.vstack([zb, qz, zb_mean, chi2, n_band, best_run, ebv, i_auto, ra, dec]).T
+    return np.vstack([zb, qz, zb_mean, chi2, n_band, best_run, ebv, i_auto, radius, sersic, ra, dec]).T
 
+def load_lens_with_mstar():
 
+    folder_path = load_folder()
+    filename = "pauxcosmos_zp.fits"
+    pau = pf.open(folder_path+filename)[1].data
+    # _paudm_id   mass_med   mass_med_min68   mass_med_max68   mass_best   sfr_med      sfr_med_min68   sfr_med_max68   sfr_best      NB_mass                 NB_mass_err             NB_sfr(10Myrs)         NB_sfr(10Myrs)_err     BB_mass                 BB_mass_err             BB_sfr(10Myrs)        BB_sfr(10Myrs)_err  
+
+    starname = "st_mass.dat"
+    
+    
+    with open(folder_path+starname) as f:
+        lines = f.readlines()
+    #print lines
+    
+    y = []
+    i = 0
+    for line in lines:
+        i = i + 1 
+	if ('""' not in line.split()):
+	    #print i
+	    #print line.split()
+
+            y.append(np.array(line.split()).astype(float))
+	   
+    st = np.array(y)
+    st_id = st[:,0]
+    pau_id = pau['paudm_id']
+
+    mask_one = np.where(np.in1d(pau_id, st_id))[0]
+    mask_two = np.where(np.in1d(st_id, pau_id[mask_one]))[0]
+    arg_one = np.argsort(pau_id[mask_one])
+    arg_two = np.argsort(st_id[mask_two])
+
+    print pau_id[mask_one][arg_one]
+    print st_id[mask_two][arg_two]
+
+    pau = pau[mask_one][arg_one]
+    st = st[mask_two][arg_two]
+    
+    y = pau
+
+    zb, qz, zb_mean, chi2, n_band, best_run, ebv, i_auto, radius, sersic, ra, dec = y['zb'], y['qz'], y['zb_mean'], y['chi2'], y['n_band'], y['best_run'], y['ebv'], y['i_auto'], np.sqrt(y['acs_a_image']*y['acs_b_image']), y['sersic_n_gim2d'], y['ra'], y['dec']
+
+    return np.vstack([zb, np.log10(st[:,9]), np.log10(st[:,10]), st[:,11], st[:,12], qz, zb_mean, chi2, n_band, best_run, ebv, i_auto, radius, sersic, ra, dec]).T
 
 def load_lens():
     '''coloumn names:
@@ -65,6 +108,16 @@ def load_lens():
     
     return np.loadtxt(folder_path+filename)
 
+def load_lens_cosmos():
+
+
+    folder_path = load_folder()
+    filename = "pauxcosmos_zp.fits"
+    y = pf.open(folder_path+filename)[1].data
+        
+    header = pf.open(folder_path+filename)[1].header
+    
+    return y, header
 
 def load_random():
     '''column names: JK-regions, DEC, RA
@@ -117,3 +170,8 @@ def load_tim():
     '''
     
     return np.loadtxt('new_tim.txt')
+
+if __name__ == '__main__':
+
+
+    load_lens_with_mstar()
